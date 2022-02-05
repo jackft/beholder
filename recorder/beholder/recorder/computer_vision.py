@@ -36,8 +36,8 @@ class MotionDetector():
 
     def biggest_bounding_box(self, areas, contours) -> List[Tuple[int, int, int, int]]:
         if len(areas) == 0: return []
-        l = min(len(areas), 3)
-        indices = np.argpartition(areas, -l)[-l:]
+        num_boxes = min(len(areas), 3)
+        indices = np.argpartition(areas, -num_boxes)[-num_boxes:]
         return [
             cv2.boundingRect(contours[idx])
             for idx in indices
