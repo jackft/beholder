@@ -3,6 +3,8 @@
 */**/.dependencies
 */**/.db
 */**/uwsgi_metrics
+*.mp4
+*/log
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
