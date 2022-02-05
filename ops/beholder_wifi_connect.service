@@ -1,0 +1,10 @@
+[Unit]
+Description=Beholder connect to wifi
+After=network-online.target beholder_config_copy.service
+Wants=network-online.target systemd-networkd-wait-online.service beholder_config_copy.service
+
+[Service]
+ExecStart=/home/theycantalk/beholder/startup/wifi.sh
+
+[Install]
+WantedBy=multi-user.target

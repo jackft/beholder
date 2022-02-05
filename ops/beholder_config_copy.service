@@ -1,0 +1,10 @@
+[Unit]
+Description=Beholder copy config
+After=network-online.target
+Wants=network-online.target systemd-networkd-wait-online.service
+
+[Service]
+ExecStart=/home/theycantalk/beholder/startup/copy_config.sh
+
+[Install]
+WantedBy=multi-user.target

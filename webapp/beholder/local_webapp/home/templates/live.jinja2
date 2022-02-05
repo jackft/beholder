@@ -1,0 +1,29 @@
+{% extends "layout.jinja2" %}
+
+{% block pagestyles %}
+{% endblock %}
+
+{% block content %}
+  {% include "navigation.jinja2" %}
+  <div style="max-width: 500px; margin: auto; margin-bottom: 20px;" class="alert alert-info" role="alert">
+    <h1>Live Feed</h1>
+    <p>This is a secure stream to your cameras. This can only be accessed on your home network and while logged-in to this web app. This may not work in all browsers.</p>
+  </div>
+  <div class="container" style="margin: auto; width: 800px;">
+    <video id="video" autoplay="true" controls="controls" type='application/x-mpegURL' style="width: inherit;"></video>
+    <script>
+      if (Hls.isSupported()) {
+        var video = document.getElementById('video');
+        var hls = new Hls();
+        // bind them together
+        hls.attachMedia(video);
+        hls.on(Hls.Events.MEDIA_ATTACHED, function () {
+          console.log("video and hls.js are now bound together !");
+          hls.loadSource("/live/playlist.m3u8");
+          hls.on(Hls.Events.MANIFEST_PARSED, function (event, data) {
+          });
+        });
+      }
+    </script>
+  </div>
+{% endblock %}

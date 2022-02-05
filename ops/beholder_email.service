@@ -1,0 +1,11 @@
+[Unit]
+Description=Beholder copy config
+After=network-online.target beholder_wifi_connect.service
+Wants=network-online.target systemd-networkd-wait-online.service
+
+[Service]
+WorkingDirectory=/home/theycantalk/beholder/email
+ExecStart=/home/theycantalk/beholder/email/start.sh
+
+[Install]
+WantedBy=multi-user.target
