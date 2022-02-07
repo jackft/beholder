@@ -4,6 +4,8 @@ SOURCE_PATH=beholder/recorder
 
 include ../common.mk
 
+build: install
+
 install: logs
 
 logs:
