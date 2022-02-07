@@ -1,5 +1,5 @@
 #!/bin/bash
-git checkout main
+git checkout -f main
 t=`git branch -r --sort=committerdate | tail -1`
 a=`git rev-parse $t`
 b=`git rev-parse HEAD`
