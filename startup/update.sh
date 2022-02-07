@@ -1,13 +1,13 @@
 #!/bin/bash
-git checkout -f main
+sudo -u theycantalk git checkout -f main
 t=`git branch -r --sort=committerdate | tail -1`
 a=`git rev-parse $t`
 b=`git rev-parse HEAD`
 if [ "$a" != "$b" ]; then
 	checkout=$?
-	git pull
+	sudo -u theycantalk git pull
 	pull=$?
-	cd .. && make clean && make build
+	cd .. && make clean && sudo -u theycantalk make build
 	build=$?
 	if [ -f /mnt/log.txt ]; then
 		if [ $checkout -eq 0 ]; then
