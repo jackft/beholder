@@ -50,6 +50,7 @@ class Configuration():
                  segment_time_seconds: int = 60,
                  hls_enabled: bool = False,
                  hls_list_size: int = 2,
+                 hls_target_duration: int = 1,
                  loopback_enabled: bool = False,
                  purgatory_hours: float = 0,
                  spaces_root_key: str = "beholder"):
@@ -67,6 +68,7 @@ class Configuration():
 
         self.hls_enabled = hls_enabled
         self.hls_list_size = hls_list_size
+        self.hls_target_duration = hls_target_duration
 
         self.loopback_enabled = loopback_enabled
 
@@ -165,7 +167,7 @@ class Configuration():
             compositor += (
                 f" t. ! h264parse ! video/x-h264 "
                 f" ! hlssink2 max-files={self.hls_list_size}"
-                f" location={str(self.hls_location)} target-duration=1"
+                f" location={str(self.hls_location)} target-duration={self.hls_target_duration}"
                 f" playlist_location={str(self.hls_playlist_location)}") # noqa: E122
         if self.loopback_enabled and self.loopbackdevice is not None:
             compositor += (
@@ -266,6 +268,7 @@ class Configuration():
             segment_time_seconds=parser.getint("beholder", "segment_time_seconds", fallback=60),
             hls_enabled=parser.getboolean("beholder", "hls_enabled", fallback=False),
             hls_list_size=parser.getint("beholder", "hls_list_size", fallback=5),
+            hls_target_duration=parser.getint("beholder", "hls_target_duration", fallback=1),
             loopback_enabled=parser.getboolean("beholder", "loopback_enabled", fallback=False),
             purgatory_hours=parser.getfloat("beholder", "purgatory_hours", fallback=0),
             spaces_root_key=parser.get("beholder", "spaces_root_key", fallback="beholder")
