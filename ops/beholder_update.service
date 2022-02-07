@@ -9,7 +9,6 @@ StartLimitBurst=5
 [Service]
 Type=simple
 RestartSec="12hr"
-User=theycantalk
 WorkingDirectory=/home/theycantalk/beholder/startup
 ExecStart=/home/theycantalk/beholder/startup/update.sh
 
