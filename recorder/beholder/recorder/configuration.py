@@ -43,6 +43,7 @@ class Configuration():
                  output_directory: pathlib.Path,
                  observation_id: str,
                  record_fps: int = 15,
+                 output_fps: int = 15,
                  primary_resolution: str = "1920x1080",
                  secondary_resolution: str = "1280x720",
                  loopback_width: int = 640,
@@ -60,6 +61,7 @@ class Configuration():
         self.output_directory = output_directory
         self.observation_id = observation_id
         self.record_fps = record_fps
+        self.output_fps = output_fps
 
         self.primary_resolution = primary_resolution
         self.secondary_resolution = secondary_resolution
@@ -159,8 +161,8 @@ class Configuration():
             " sink_2::xpos=0    sink_2::ypos=720 sink_2::width=1280 sink_2::height=720"
             " ! nvvidconv"
             f" ! video/x-raw(memory:NVMM),width=2560,height=1440,"
-            f"framerate={self.record_fps}/1,format=NV12"
-            " ! tee name=u ! queue"
+            f"framerate={self.output_fps}/1,format=NV12"
+            " ! tee name=u ! queue max-size-buffers=0 max-size-time=0"
             " ! nvv4l2h264enc preset-level=1 insert-vui=1 iframeinterval=30"
             " ! h264parse ! tee name=t"
             f" t. ! splitmuxsink max-size-time={out_time_ns}"
@@ -180,7 +182,7 @@ class Configuration():
                 f" v4l2sink device={self.loopbackdevice.camera.device}")  # noqa: E122
 
         inputs = []
-        sink_idx = 0
+        sink_idx = 1 # starts at 1 because the primary device is always 0
         for device in self.devices:
             if device.loopback: continue
             if device.primary:
@@ -191,7 +193,7 @@ class Configuration():
                      f" ! video/x-raw(memory:NVMM),width=1280,height=720,"
                      f"framerate={self.record_fps}/1,format=RGBA"
                      " ! queue max-size-buffers=0 max-size-time=0 max-size-bytes=0"
-                     " ! comp.sink_2 ")
+                     " ! comp.sink_0 ")
                 )
                 if device.microphone is not None:
                     inputs.append(
@@ -211,6 +213,13 @@ class Configuration():
                      " ! queue max-size-buffers=0 max-size-time=0 max-size-bytes=0"
                      f" ! comp.sink_{sink_idx} ")
                 )
+                if device.microphone is not None:
+                    inputs.append(
+                        (f"alsasrc device={device.microphone.device} latency-time=10000"
+                         " ! audioconvert ! audioresample ! audio/x-raw"
+                         " ! voaacenc ! queue max-size-buffers=0 max-size-time=0 max-size-bytes=0"
+                         f" ! mux.audio_{sink_idx} ")
+                    )
                 sink_idx += 1
         stream.append(compositor)
         stream.append("".join(inputs))
@@ -267,6 +276,7 @@ class Configuration():
             loopback_width=parser.getint("beholder", "loopback_width", fallback=640),
             loopback_height=parser.getint("beholder", "loopback_height", fallback=480),
             record_fps=parser.getint("beholder", "record_fps", fallback=15),
+            output_fps=parser.getint("beholder", "output_fps", fallback=15),
             segment_time_seconds=parser.getint("beholder", "segment_time_seconds", fallback=60),
             hls_enabled=parser.getboolean("beholder", "hls_enabled", fallback=False),
             hls_list_size=parser.getint("beholder", "hls_list_size", fallback=5),

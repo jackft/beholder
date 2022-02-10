@@ -1,3 +1,4 @@
+import datetime
 import shutil
 import subprocess
 
@@ -20,9 +21,8 @@ def record(config: Configuration) -> Optional[subprocess.Popen]:
     gstreamer_flags = config.gstreamer_flags()
 
     _log().info("gstreamer %s", gstreamer_flags)
-    print(subprocess.list2cmdline(gstreamer_flags))
+    last_restart = datetime.datetime.now()
     p = subprocess.Popen(gstreamer_flags)
-    print(p.args)
     return p
 
 

@@ -193,6 +193,7 @@ class Controller:
         _log().info("Program has decided to stop recording")
         if self.record_process is not None:
             self.record_process.send_signal(signal.SIGINT)
+            _log().info("shutdown")
 
     def shutdown(self):
         _log().info("trying to shut down gstreamer")
@@ -275,8 +276,9 @@ class Controller:
             _log().info("computer vision result %s", future.result())
 
     def start_process(self):
-        self.process_future = self.process_pool.submit(self.process)
-        self.process_future.add_done_callback(self.process_done)
+        #self.process_future = self.process_pool.submit(self.process)
+        #self.process_future.add_done_callback(self.process_done)
+        pass
 
     def process(self):
         return process_all(self.config, self.interval_collection)
