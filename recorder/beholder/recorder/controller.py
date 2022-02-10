@@ -276,8 +276,8 @@ class Controller:
             _log().info("computer vision result %s", future.result())
 
     def start_process(self):
-        #self.process_future = self.process_pool.submit(self.process)
-        #self.process_future.add_done_callback(self.process_done)
+        # self.process_future = self.process_pool.submit(self.process)
+        # self.process_future.add_done_callback(self.process_done)
         pass
 
     def process(self):
