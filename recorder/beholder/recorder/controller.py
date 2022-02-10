@@ -102,6 +102,7 @@ class Controller:
         self.config_usb_listener()
 
         self.controller_state = ControllerState()
+        self.last_restart = datetime.datetime.now()
 
     # --------------------------------------------------------------------------
     # State Machine Stuff
@@ -146,6 +147,9 @@ class Controller:
                 if self.is_blackout_datetime(now) or not self.is_record_time(now):
                     self.stop_record()
                 else:
+                    time_running = datetime.datetime.now() - self.last_restart
+                    if time_running.total_seconds() > self.config.restart_seconds:
+                        self.stop_record()
                     if self.record_process is None or self.record_process.poll() is not None:
                         self.config.refresh_devices()
                         self.record()
@@ -189,6 +193,7 @@ class Controller:
         _log().info("Program has decided to stop recording")
         if self.record_process is not None:
             self.record_process.send_signal(signal.SIGINT)
+            _log().info("shutdown")
 
     def shutdown(self):
         _log().info("trying to shut down gstreamer")
@@ -253,6 +258,7 @@ class Controller:
     # Main Controller Code: record, process, upload
     # --------------------------------------------------------------------------
     def record(self):
+        self.last_restart = datetime.datetime.now()
         self.record_process = record(self.config)
 
     def start_computer_vision(self):
