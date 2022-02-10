@@ -46,6 +46,7 @@ class Configuration():
                  output_fps: int = 15,
                  primary_resolution: str = "1920x1080",
                  secondary_resolution: str = "1280x720",
+                 multi_audio_stream: bool = False,
                  loopback_width: int = 640,
                  loopback_height: int = 480,
                  segment_time_seconds: int = 60,
@@ -65,6 +66,7 @@ class Configuration():
 
         self.primary_resolution = primary_resolution
         self.secondary_resolution = secondary_resolution
+        self.multi_audio_stream = multi_audio_stream
         self.loopback_width = loopback_width
         self.loopback_height = loopback_height
         self.segment_time_seconds = segment_time_seconds
@@ -213,7 +215,7 @@ class Configuration():
                      " ! queue max-size-buffers=0 max-size-time=0 max-size-bytes=0"
                      f" ! comp.sink_{sink_idx} ")
                 )
-                if device.microphone is not None:
+                if device.microphone is not None and self.multi_audio_stream:
                     inputs.append(
                         (f"alsasrc device={device.microphone.device} latency-time=10000"
                          " ! audioconvert ! audioresample ! audio/x-raw"
@@ -273,6 +275,7 @@ class Configuration():
             primary_resolution=parser.get("beholder", "primary_resolution", fallback="1280x720"),
             secondary_resolution=parser.get(
                 "beholder", "secondary_resolution", fallback="1280x720"),
+            multi_audio_stream=parser.getboolean("beholder", "multi_audio_stream", fallback=False),
             loopback_width=parser.getint("beholder", "loopback_width", fallback=640),
             loopback_height=parser.getint("beholder", "loopback_height", fallback=480),
             record_fps=parser.getint("beholder", "record_fps", fallback=15),
