@@ -53,6 +53,7 @@ class Configuration():
                  hls_target_duration: int = 1,
                  loopback_enabled: bool = False,
                  purgatory_hours: float = 0,
+                 restart_seconds: int = 3600,
                  spaces_root_key: str = "beholder"):
         self.primary_device_name = primary_device_name
         self.devices: List[DeviceComplex] = devices
@@ -72,6 +73,7 @@ class Configuration():
 
         self.loopback_enabled = loopback_enabled
 
+        self.restart_seconds = restart_seconds
         self.purgatory_hours = purgatory_hours
 
         self.spaces_root_key = spaces_root_key
@@ -270,6 +272,7 @@ class Configuration():
             hls_list_size=parser.getint("beholder", "hls_list_size", fallback=5),
             hls_target_duration=parser.getint("beholder", "hls_target_duration", fallback=1),
             loopback_enabled=parser.getboolean("beholder", "loopback_enabled", fallback=False),
+            restart_seconds=parser.getint("beholder", "restart_seconds", fallback=0),
             purgatory_hours=parser.getfloat("beholder", "purgatory_hours", fallback=0),
             spaces_root_key=parser.get("beholder", "spaces_root_key", fallback="beholder")
         )
