@@ -36,8 +36,8 @@ class Config:
     # Email
     MAIL_SERVER = environ.get('MAIL_SERVER')
     MAIL_PORT = environ.get('MAIL_PORT')
-    MAIL_USE_TLS = environ.get('MAIL_TLS')
-    MAIL_USE_SSL = environ.get('MAIL_SSL')
+    MAIL_USE_TLS = environ.get('MAIL_TLS').lower() in ('true', '1', 't')
+    MAIL_USE_SSL = environ.get('MAIL_SSL').lower() in ('true', '1', 't')
     MAIL_USERNAME = environ.get('MAIL_USERNAME')
     MAIL_PASSWORD = environ.get('MAIL_PASSWORD')
     MAIL_DEFAULT_SENDER = environ.get('MAIL_SENDER')
