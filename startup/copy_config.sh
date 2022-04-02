@@ -1,5 +1,5 @@
 #!/bin/bash
-drive=`fdisk -l | grep -E "exFAT|NFTS" | cut -d " " -f1`
+drive=`fdisk -l | grep -E "exFAT|NFTS|FAT32" | cut -d " " -f1`
 if [ -e $drive ]; then
 	mount $drive /mnt || mount /dev/sda /mnt || mount /dev/sdb /mnt
 	echo "successfully mounted $drive to device" > /mnt/log.txt
